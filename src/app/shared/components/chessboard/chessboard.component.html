@@ -1,0 +1,22 @@
+<div id="boardOuter">
+  <div id="letterContainer">
+    <div *ngFor="let letter of letters" class="labelLetter">{{ letter }}</div>
+  </div>
+  <div id="numberContainer">
+    <div *ngFor="let number of numbers" class="labelNumber">{{ number }}</div>
+  </div>
+  <div id="boardInner">
+    <!-- 32 Pieces -->
+    <img
+      *ngFor="let chessPiece of chessPieces"
+      [attr.src]="'/assets/images/' + chessPiece.img + '.png'"
+      [alt]="chessPiece.img"
+      [style.margin-left.px]="findColumn(chessPiece.position.column)"
+      [style.margin-top.px]="findRow(chessPiece.position.row)"
+    />
+    <!-- 64 Squares of the board-->
+    <div *ngFor="let i of arrayOne(8)" class="row">
+      <div *ngFor="let j of arrayOne(8)" class="square"></div>
+    </div>
+  </div>
+</div>

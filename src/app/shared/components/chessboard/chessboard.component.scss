@@ -1,0 +1,82 @@
+// Sizes
+$square_size: 100px;
+$border_size: 4px;
+
+// Colors
+$black_case: rgba(0, 0, 0, 0.6);
+
+#boardOuter {
+  height: calc(
+    (#{$square_size} * 8) + (#{$square_size} / 2) + (#{$border_size} * 2)
+  );
+  width: calc(
+    (#{$square_size} * 8) + (#{$square_size} / 2) + (#{$border_size} * 2)
+  );
+  margin: auto;
+
+  #letterContainer {
+    width: calc(#{$square_size} * 8);
+    height: calc(#{$square_size} / 2);
+    margin-left: calc(#{$square_size} / 2);
+
+    .labelLetter {
+      width: #{$square_size};
+      height: calc(#{$square_size} / 2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  #numberContainer {
+    width: calc(#{$square_size} / 2);
+    height: calc(#{$square_size} * 8);
+    display: inline-block;
+    vertical-align: top;
+
+    .labelNumber {
+      width: calc(#{$square_size} / 2);
+      height: #{$square_size};
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  #boardInner {
+    width: calc(#{$square_size} * 8);
+    height: calc(#{$square_size} * 8);
+    display: inline-block;
+    border: solid #{$border_size} black;
+    position: relative;
+
+    .row {
+      width: calc(#{$square_size} * 8);
+      height: calc(#{$square_size});
+      display: flex;
+
+      .square {
+        width: calc(#{$square_size});
+        height: calc(#{$square_size});
+        display: inline-block;
+        border: 1px solid black;
+      }
+    }
+    .row:nth-child(odd) {
+      .square:nth-child(odd) {
+        background-color: #{$black_case};
+      }
+    }
+    .row:nth-child(even) {
+      .square:nth-child(even) {
+        background-color: #{$black_case};
+      }
+    }
+
+    img {
+      width: calc(#{$square_size} - #{$border_size} * 2);
+      height: calc(#{$square_size} - #{$border_size} * 2);
+      position: absolute;
+    }
+  }
+}
