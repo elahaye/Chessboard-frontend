@@ -8,11 +8,7 @@ export class BishopPiece extends ChessPiece implements PieceInterface {
   constructor(position: PiecePosition, color: ChessPieceColor) {
     super(position, color);
     this._type = 'bishop';
-    if (this._color === 'white') {
-      this._img = 'white_bishop';
-    } else if (this._color === 'black') {
-      this._img = 'black_bishop';
-    }
+    this.setImage();
   }
 
   public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {

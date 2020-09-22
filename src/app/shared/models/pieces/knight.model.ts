@@ -8,11 +8,7 @@ export class KnightPiece extends ChessPiece implements PieceInterface {
   constructor(position: PiecePosition, color: ChessPieceColor) {
     super(position, color);
     this._type = 'knight';
-    if (this._color === 'white') {
-      this._img = 'white_knight';
-    } else if (this._color === 'black') {
-      this._img = 'black_knight';
-    }
+    this.setImage();
   }
 
   public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {

@@ -38,4 +38,8 @@ export class ChessPiece implements PieceInterface {
   getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {
     return [];
   }
+
+  protected setImage() {
+    this._img = `${this._color}_${this._type}`;
+  }
 }

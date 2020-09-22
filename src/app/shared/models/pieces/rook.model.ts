@@ -8,11 +8,7 @@ export class RookPiece extends ChessPiece implements PieceInterface {
   constructor(position: PiecePosition, color: ChessPieceColor) {
     super(position, color);
     this._type = 'rook';
-    if (this._color == 'white') {
-      this._img = 'white_rook';
-    } else if (this._color == 'black') {
-      this._img = 'black_rook';
-    }
+    this.setImage();
   }
 
   public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {
