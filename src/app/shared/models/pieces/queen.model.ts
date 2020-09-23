@@ -8,11 +8,7 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
   constructor(position: PiecePosition, color: ChessPieceColor) {
     super(position, color);
     this._type = 'queen';
-    if (this._color === 'white') {
-      this._img = 'white_queen';
-    } else if (this._color === 'black') {
-      this._img = 'black_queen';
-    }
+    this.setImage();
   }
 
   public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {
@@ -26,6 +22,7 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
       -1,
       1
     );
+
     return availablePositionUpward.concat(availablePositionDownward);
   }
 
@@ -41,6 +38,8 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
     maximum: 1 | 8
   ): PiecePosition[] {
     const availableMovement: PiecePosition[] = [];
+
+    // Vertical and Diagonal movements
     let currentColumnLeft =
       PiecePosition.transformColumnToNumber(this.position.column) - 1;
     let currentColumnMiddle = PiecePosition.transformColumnToNumber(
@@ -48,6 +47,7 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
     );
     let currentColumnRight =
       PiecePosition.transformColumnToNumber(this.position.column) + 1;
+
     for (
       let i = this.position.row + direction;
       this.checkMaximumFor(i, maximum);
@@ -94,6 +94,26 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
         }
       }
     }
+
+    // Horizontal movements
+    currentColumnMiddle =
+      PiecePosition.transformColumnToNumber(this.position.column) + direction;
+    for (
+      let j = currentColumnMiddle;
+      this.checkMaximumFor(j, maximum);
+      j += direction
+    ) {
+      if (this.checkIfAccessible(currentColumnMiddle)) {
+        const positionToCheck = this.getPositionToCheck(this.position.row, j);
+        if (!currentBoard.hasPieceInPosition(positionToCheck)) {
+          availableMovement.push(positionToCheck);
+        }
+        currentColumnMiddle = currentBoard.hasPieceInPosition(positionToCheck)
+          ? -1
+          : j + direction;
+      }
+    }
+
     return availableMovement;
   }
 

@@ -11,8 +11,8 @@
       *ngFor="let chessPiece of board.pieces"
       [attr.src]="'/assets/images/' + chessPiece.img + '.png'"
       [alt]="chessPiece.img"
-      [style.margin-left.px]="findColumn(chessPiece.position.column)"
-      [style.margin-top.px]="findRow(chessPiece.position.row)"
+      [style.margin-left.px]="chessPiece.position.column | findColumn"
+      [style.margin-top.px]="chessPiece.position.row | findRow"
     />
     <!-- 64 Squares of the board-->
     <div *ngFor="let i of arrayOne(8); let indexRow = index" class="row">

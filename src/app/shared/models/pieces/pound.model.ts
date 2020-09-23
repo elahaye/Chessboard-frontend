@@ -8,11 +8,7 @@ export class PoundPiece extends ChessPiece implements PieceInterface {
   constructor(position: PiecePosition, color: ChessPieceColor) {
     super(position, color);
     this._type = 'pound';
-    if (this._color === 'white') {
-      this._img = 'white_pound';
-    } else if (this._color === 'black') {
-      this._img = 'black_pound';
-    }
+    this.setImage();
   }
 
   /**
