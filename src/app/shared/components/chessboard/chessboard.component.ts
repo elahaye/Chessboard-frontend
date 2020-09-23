@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { ChessBoard } from '../../models/board.model';
 import { ChessPiece } from '../../models/piece.model';
 import { GamesToolsService } from '../../services/games-tools/games-tools.service';
 
@@ -7,17 +8,30 @@ import { GamesToolsService } from '../../services/games-tools/games-tools.servic
   templateUrl: './chessboard.component.html',
   styleUrls: ['./chessboard.component.scss'],
 })
-export class ChessboardComponent implements OnInit {
+export class ChessboardComponent implements OnInit, AfterViewInit {
   letters: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   numbers: string[] = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
   chessPieces: ChessPiece[] = GamesToolsService.getDefaultStartingPosition();
+  chessboard: ChessBoard;
 
   arrayOne(n: number): any[] {
     return Array(n);
   }
 
-  constructor() {}
+  constructor() {
+    console.log(this.chessPieces);
+  }
 
   ngOnInit(): void {}
+
+  ngAfterViewInit() {
+    this.chessboard = new ChessBoard(this.chessPieces);
+    var piece = this.chessPieces[14];
+    console.log(
+      piece.getAvailableMovement(
+        (this.chessboard = new ChessBoard(this.chessPieces))
+      )
+    );
+  }
 }
