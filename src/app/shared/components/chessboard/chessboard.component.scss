@@ -1,5 +1,5 @@
 // Sizes
-$square_size: 100px;
+$square_size: 70px;
 $border_size: 4px;
 
 // Colors
@@ -74,8 +74,8 @@ $black_case: rgba(0, 0, 0, 0.6);
     }
 
     img {
-      width: calc(#{$square_size} - #{$border_size} * 2);
-      height: calc(#{$square_size} - #{$border_size} * 2);
+      width: calc(#{$square_size} - #{$border_size} * 4);
+      height: calc(#{$square_size} - #{$border_size} * 4);
       position: absolute;
     }
   }
