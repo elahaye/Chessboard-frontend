@@ -8,15 +8,16 @@
   <div id="boardInner">
     <!-- 32 Pieces -->
     <img
-      *ngFor="let chessPiece of chessPieces"
+      *ngFor="let chessPiece of board.pieces"
       [attr.src]="'/assets/images/' + chessPiece.img + '.png'"
       [alt]="chessPiece.img"
       [style.margin-left.px]="chessPiece.position.column | findColumn"
       [style.margin-top.px]="chessPiece.position.row | findRow"
     />
     <!-- 64 Squares of the board-->
-    <div *ngFor="let i of arrayOne(8)" class="row">
-      <div *ngFor="let j of arrayOne(8)" class="square"></div>
+    <div *ngFor="let i of arrayOne(8); let indexRow = index" class="row">
+      <div *ngFor="let j of arrayOne(8); let indexColumn = index" class="square" [attr.data-position]="indexRow | getPosition:indexColumn">
+      </div>
     </div>
   </div>
 </div>

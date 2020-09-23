@@ -1,1 +1,3 @@
-<p>games works!</p>
+<app-chessboard *ngIf="currentGame" [board]="currentGame.board"></app-chessboard>
+
+<button pButton type="button" label="Start new game" (click)="startNewGame()"></button>
