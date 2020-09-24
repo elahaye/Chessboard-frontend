@@ -8,36 +8,28 @@ import { GamesToolsService } from '../../services/games-tools/games-tools.servic
   templateUrl: './chessboard.component.html',
   styleUrls: ['./chessboard.component.scss'],
 })
-
 export class ChessboardComponent implements OnInit, AfterViewInit {
-  @Input() board: ChessBoard;
   letters: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   numbers: string[] = ['1', '2', '3', '4', '5', '6', '7', '8'];
-  white: string = 'white';
-  black: string = 'black';
-  squareSize: number = 70;
-  borderSize: number = 4;
 
-  chessPieces: ChessPiece[] = GamesToolsService.getDefaultStartingPosition();
-  chessboard: ChessBoard;
+  @Input()
+  board: ChessBoard;
+  @Input()
+  pieces: ChessPiece[] = GamesToolsService.getDefaultStartingPosition();
 
   arrayOne(n: number): any[] {
     return Array(n);
   }
 
   constructor() {
-    console.log(this.chessPieces);
+    console.log(this.pieces);
   }
 
   ngOnInit(): void {}
 
   ngAfterViewInit() {
-    this.chessboard = new ChessBoard(this.chessPieces);
-    var piece = this.chessPieces[14];
-    console.log(
-      piece.getAvailableMovement(
-        (this.chessboard = new ChessBoard(this.chessPieces))
-      )
-    );
+    this.board = new ChessBoard(this.pieces);
+    var piece = this.pieces[14];
+    console.log(piece.getAvailableMovement(this.board));
   }
 }

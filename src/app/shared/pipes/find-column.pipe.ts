@@ -4,10 +4,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FindColumnPipe implements PipeTransform {
   letters: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   squareSize: number = 100;
-  borderSize: number = 10;
+  marginSize: number = 10;
 
   transform(letter: string): number {
     var columnPlace = this.letters.indexOf(letter);
-    return columnPlace * this.squareSize + this.borderSize;
+    return columnPlace * this.squareSize + this.marginSize;
   }
 }

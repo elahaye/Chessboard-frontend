@@ -48,42 +48,49 @@ export class KingPiece extends ChessPiece implements PieceInterface {
     let currentColumnRight =
       PiecePosition.transformColumnToNumber(this.position.column) + 1;
 
-    if (this.checkIfAccessible(currentColumnLeft)) {
-      const positionLeftToCheck = this.getPositionToCheck(
-        this.position.row + direction,
-        currentColumnLeft
-      );
-      if (!currentBoard.hasPieceInPosition(positionLeftToCheck)) {
-        availableMovement.push(positionLeftToCheck);
+    if (
+      1 <= this.position.row + direction &&
+      this.position.row + direction <= 8
+    ) {
+      if (this.checkIfAccessible(currentColumnLeft)) {
+        const positionLeftToCheck = this.getPositionToCheck(
+          this.position.row + direction,
+          currentColumnLeft
+        );
+        if (!currentBoard.hasPieceInPosition(positionLeftToCheck)) {
+          availableMovement.push(positionLeftToCheck);
+        }
+        currentColumnLeft = currentBoard.hasPieceInPosition(positionLeftToCheck)
+          ? -1
+          : currentColumnLeft - 1;
       }
-      currentColumnLeft = currentBoard.hasPieceInPosition(positionLeftToCheck)
-        ? -1
-        : currentColumnLeft - 1;
-    }
-    if (this.checkIfAccessible(currentColumnMiddle)) {
-      const positionMiddleToCheck = this.getPositionToCheck(
-        this.position.row + direction,
-        currentColumnMiddle
-      );
-      if (!currentBoard.hasPieceInPosition(positionMiddleToCheck)) {
-        availableMovement.push(positionMiddleToCheck);
+      if (this.checkIfAccessible(currentColumnMiddle)) {
+        const positionMiddleToCheck = this.getPositionToCheck(
+          this.position.row + direction,
+          currentColumnMiddle
+        );
+        if (!currentBoard.hasPieceInPosition(positionMiddleToCheck)) {
+          availableMovement.push(positionMiddleToCheck);
+        }
+        currentColumnMiddle = currentBoard.hasPieceInPosition(
+          positionMiddleToCheck
+        )
+          ? -1
+          : currentColumnMiddle;
       }
-      currentColumnMiddle = currentBoard.hasPieceInPosition(
-        positionMiddleToCheck
-      )
-        ? -1
-        : currentColumnMiddle;
-    }
-    if (this.checkIfAccessible(currentColumnRight)) {
-      const positionRightToCheck = this.getPositionToCheck(
-        this.position.row + direction,
-        currentColumnRight
-      );
-      currentColumnRight = currentBoard.hasPieceInPosition(positionRightToCheck)
-        ? -1
-        : currentColumnRight + 1;
-      if (!currentBoard.hasPieceInPosition(positionRightToCheck)) {
-        availableMovement.push(positionRightToCheck);
+      if (this.checkIfAccessible(currentColumnRight)) {
+        const positionRightToCheck = this.getPositionToCheck(
+          this.position.row + direction,
+          currentColumnRight
+        );
+        currentColumnRight = currentBoard.hasPieceInPosition(
+          positionRightToCheck
+        )
+          ? -1
+          : currentColumnRight + 1;
+        if (!currentBoard.hasPieceInPosition(positionRightToCheck)) {
+          availableMovement.push(positionRightToCheck);
+        }
       }
     }
 
@@ -100,20 +107,10 @@ export class KingPiece extends ChessPiece implements PieceInterface {
       }
       currentColumnMiddle = currentBoard.hasPieceInPosition(positionToCheck)
         ? -1
-        : currentColumnMiddle + direction;
+        : currentColumnMiddle;
     }
 
     return availableMovement;
-  }
-
-  /**
-   * If we check the board going downward, the iteration value is going down and not up to a
-   * maximum, so we need to dynamise the check for maximum value in the for.
-   * @param i Current iteration value
-   * @param maximum Maximum value for the iteration
-   */
-  private checkMaximumFor(i: number, maximum: 1 | 8) {
-    return maximum === 1 ? i >= maximum : i <= maximum;
   }
 
   /**
