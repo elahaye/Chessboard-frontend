@@ -11,25 +11,37 @@ import { GamesToolsService } from '../../services/games-tools/games-tools.servic
 export class ChessboardComponent implements OnInit, AfterViewInit {
   letters: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   numbers: string[] = ['1', '2', '3', '4', '5', '6', '7', '8'];
+  status: boolean = false;
+
+  board: ChessBoard;
 
   @Input()
-  board: ChessBoard;
+  selectedPiece: string;
   @Input()
-  pieces: ChessPiece[] = GamesToolsService.getDefaultStartingPosition();
+  potentialsMovements: string[] = [];
 
   arrayOne(n: number): any[] {
     return Array(n);
   }
 
-  constructor() {
-    console.log(this.pieces);
+  constructor() {}
+
+  ngOnInit(): void {
+    this.board = new ChessBoard(GamesToolsService.getDefaultStartingPosition());
   }
 
-  ngOnInit(): void {}
+  ngAfterViewInit() {}
 
-  ngAfterViewInit() {
-    this.board = new ChessBoard(this.pieces);
-    var piece = this.pieces[14];
-    console.log(piece.getAvailableMovement(this.board));
+  pieceOnClick(chessPiece: ChessPiece) {
+    this.selectedPiece = chessPiece.position.column + chessPiece.position.row;
+
+    var potentialMovements = chessPiece.getAvailableMovement(this.board);
+    this.potentialsMovements = [];
+
+    for (let i = 0; i < potentialMovements.length; i++) {
+      this.potentialsMovements.push(
+        potentialMovements[i].column + potentialMovements[i].row
+      );
+    }
   }
 }

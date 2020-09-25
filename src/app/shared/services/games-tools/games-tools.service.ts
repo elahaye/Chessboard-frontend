@@ -30,7 +30,7 @@ export class GamesToolsService {
       new BishopPiece({ row: 1, column: 'C' }, 'white'),
       new BishopPiece({ row: 1, column: 'F' }, 'white'),
       new KingPiece({ row: 1, column: 'D' }, 'white'),
-      new QueenPiece({ row: 1, column: 'E' }, 'white'),
+      new QueenPiece({ row: 4, column: 'E' }, 'white'),
       new PoundPiece({ row: 7, column: 'A' }, 'black'),
       new PoundPiece({ row: 7, column: 'B' }, 'black'),
       new PoundPiece({ row: 7, column: 'C' }, 'black'),
