@@ -14,11 +14,14 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
   status: boolean = false;
 
   board: ChessBoard;
+  chosenChessPiece: ChessPiece;
 
   @Input()
   selectedPiece: string;
   @Input()
   potentialsMovements: string[] = [];
+  @Input()
+  potentialAttacks: string[] = [];
 
   arrayOne(n: number): any[] {
     return Array(n);
@@ -33,7 +36,9 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {}
 
   pieceOnClick(chessPiece: ChessPiece) {
+    this.chosenChessPiece = chessPiece;
     this.selectedPiece = chessPiece.position.column + chessPiece.position.row;
+    console.log(this.selectedPiece);
 
     var potentialMovements = chessPiece.getAvailableMovement(this.board);
     this.potentialsMovements = [];
@@ -42,6 +47,19 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
       this.potentialsMovements.push(
         potentialMovements[i].column + potentialMovements[i].row
       );
+    }
+  }
+
+  availableMovementsOnClick(event: any) {
+    if (event.target.getAttribute('class').includes('availableMovements')) {
+      this.chosenChessPiece.position.column = event.target.getAttribute(
+        'data-position'
+      )[0];
+      this.chosenChessPiece.position.row = event.target.getAttribute(
+        'data-position'
+      )[1];
+      this.selectedPiece = '';
+      this.potentialsMovements = [];
     }
   }
 }

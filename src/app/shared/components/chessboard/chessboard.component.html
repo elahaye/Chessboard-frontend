@@ -29,8 +29,13 @@
           availableMovements:
             (indexRow
             | getPosition: indexColumn
-            | availableMovements: potentialsMovements)
+            | availableMovements: potentialsMovements),
+          potentialAttacks:
+            (indexRow
+            | getPosition: indexColumn
+            | availableMovements: potentialAttacks)
         }"
+        (click)="availableMovementsOnClick($event)"
       ></div>
     </div>
   </div>

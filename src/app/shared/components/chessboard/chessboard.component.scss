@@ -68,11 +68,14 @@ $green-backround: rgba(63, 243, 132, 0.548);
         border: 1px solid black;
       }
       .selectedPiece {
-        border: 5px solid #{$red-border};
+        border: 5px solid #{$green-border};
       }
       .availableMovements {
         border: 5px solid #{$green-border};
         background-color: #{$green-backround} !important;
+      }
+      .potentialAttacks {
+        border: 5px solid #{$red-border};
       }
     }
     .row:nth-child(odd) {
