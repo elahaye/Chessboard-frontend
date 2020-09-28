@@ -43,6 +43,5 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
         potentialMovements[i].column + potentialMovements[i].row
       );
     }
-    console.log(this.potentialsMovements);
   }
 }

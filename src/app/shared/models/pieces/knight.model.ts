@@ -41,31 +41,33 @@ export class KnightPiece extends ChessPiece implements PieceInterface {
     let currentColumnMiddle = PiecePosition.transformColumnToNumber(
       this.position.column
     );
+    let rowColumnMovements: { row: number; column: number }[] = [
+      {
+        row: this.position.row + direction * 2,
+        column: currentColumnMiddle + direction,
+      },
+      {
+        row: this.position.row - direction * 2,
+        column: currentColumnMiddle + direction,
+      },
+      {
+        row: this.position.row + direction,
+        column: currentColumnMiddle + direction * 2,
+      },
+      {
+        row: this.position.row - direction,
+        column: currentColumnMiddle + direction * 2,
+      },
+    ];
 
-    this.getAvailableCase(
-      currentBoard,
-      availableMovement,
-      this.position.row + direction * 2,
-      currentColumnMiddle + direction
-    );
-    this.getAvailableCase(
-      currentBoard,
-      availableMovement,
-      this.position.row - direction * 2,
-      currentColumnMiddle + direction
-    );
-    this.getAvailableCase(
-      currentBoard,
-      availableMovement,
-      this.position.row + direction,
-      currentColumnMiddle + direction * 2
-    );
-    this.getAvailableCase(
-      currentBoard,
-      availableMovement,
-      this.position.row - direction,
-      currentColumnMiddle + direction * 2
-    );
+    for (let i = 0; i < rowColumnMovements.length; i++) {
+      this.getAvailableCase(
+        currentBoard,
+        availableMovement,
+        rowColumnMovements[i]['row'],
+        rowColumnMovements[i]['column']
+      );
+    }
 
     return availableMovement;
   }
@@ -83,7 +85,6 @@ export class KnightPiece extends ChessPiece implements PieceInterface {
       rowDirection,
       columnDirection
     );
-    console.log(rowDirection, columnDirection);
 
     if (!currentBoard.hasPieceInPosition(positionToCheck)) {
       availableMovement.push(positionToCheck);
