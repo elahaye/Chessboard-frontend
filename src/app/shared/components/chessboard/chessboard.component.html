@@ -7,21 +7,12 @@
   </div>
   <div id="boardInner">
     <!-- 32 Pieces -->
-    <img
-      *ngFor="let chessPiece of board.pieces"
-      [attr.src]="'/assets/images/' + chessPiece.img + '.png'"
-      [alt]="chessPiece.img"
-      [style.margin-left.px]="chessPiece.position.column | findColumn"
-      [style.margin-top.px]="chessPiece.position.row | findRow"
-      (click)="pieceOnClick(chessPiece)"
-    />
+    <img *ngFor="let chessPiece of board.pieces" [attr.src]="'/assets/images/' + chessPiece.img + '.png'"
+      [alt]="chessPiece.img" [style.margin-left.px]="chessPiece.position.column | findColumn"
+      [style.margin-top.px]="chessPiece.position.row | findRow" (click)="pieceOnClick(chessPiece)" />
     <!-- 64 Squares of the board-->
     <div *ngFor="let i of arrayOne(8); let indexRow = index" class="row">
-      <div
-        *ngFor="let j of arrayOne(8); let indexColumn = index"
-        class="square"
-        [attr.data-position]="indexRow | getPosition: indexColumn"
-        [ngClass]="{
+      <div *ngFor="let j of arrayOne(8); let indexColumn = index" class="square" [ngClass]="{
           selectedPiece:
             selectedPiece === (indexRow | getPosition: indexColumn),
           notSelectedPiece:
@@ -34,9 +25,7 @@
             (indexRow
             | getPosition: indexColumn
             | availableMovements: potentialAttacks)
-        }"
-        (click)="availableMovementsOnClick($event)"
-      ></div>
+        }" (click)="availableMovementsOnClick(indexRow, indexColumn, potentialsMovements)"></div>
     </div>
   </div>
 </div>

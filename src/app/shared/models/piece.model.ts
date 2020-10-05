@@ -3,6 +3,12 @@ import { ChessPieceType } from './interfaces/piece-type.model';
 import { PiecePosition } from './interfaces/position.model';
 import { PieceInterface } from './interfaces/piece.interface';
 import { ChessBoard } from './board.model';
+import { BishopPiece } from './pieces/bishop.model';
+import { QueenPiece } from './pieces/queen.model';
+import { KingPiece } from './pieces/king.model';
+import { PoundPiece } from './pieces/pound.model';
+import { RookPiece } from './pieces/rook.model';
+import { KnightPiece } from './pieces/knight.model';
 
 export class ChessPiece implements PieceInterface {
   protected _type: ChessPieceType;
@@ -43,3 +49,11 @@ export class ChessPiece implements PieceInterface {
     return [];
   }
 }
+
+export type AllChessPieces =
+  | BishopPiece
+  | QueenPiece
+  | KingPiece
+  | PoundPiece
+  | RookPiece
+  | KnightPiece;

@@ -1,5 +1,10 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { ChessBoard } from '../../models/board.model';
+import {
+  PiecePosition,
+  PositionColumnPiece,
+  PositionRowPiece,
+} from '../../models/interfaces/position.model';
 import { ChessPiece } from '../../models/piece.model';
 import { GamesToolsService } from '../../services/games-tools/games-tools.service';
 
@@ -14,7 +19,6 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
   status: boolean = false;
 
   board: ChessBoard;
-  chosenChessPiece: ChessPiece;
 
   @Input()
   selectedPiece: string;
@@ -27,37 +31,45 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
     return Array(n);
   }
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.board = new ChessBoard(GamesToolsService.getDefaultStartingPosition());
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   pieceOnClick(chessPiece: ChessPiece) {
-    this.chosenChessPiece = chessPiece;
     this.selectedPiece = chessPiece.position.column + chessPiece.position.row;
-    console.log(this.selectedPiece);
 
-    var potentialMovements = chessPiece.getAvailableMovement(this.board);
+    var availablesMovements = chessPiece.getAvailableMovement(this.board);
     this.potentialsMovements = [];
 
-    for (let i = 0; i < potentialMovements.length; i++) {
+    for (let i = 0; i < availablesMovements.length; i++) {
       this.potentialsMovements.push(
-        potentialMovements[i].column + potentialMovements[i].row
+        availablesMovements[i].column + availablesMovements[i].row
       );
     }
   }
 
-  availableMovementsOnClick(event: any) {
-    if (event.target.getAttribute('class').includes('availableMovements')) {
-      this.chosenChessPiece.position.column = event.target.getAttribute(
-        'data-position'
-      )[0];
-      this.chosenChessPiece.position.row = event.target.getAttribute(
-        'data-position'
-      )[1];
+  availableMovementsOnClick(indexRow: number, indexColumn: number, potentialsMovements: string[]) {
+    let selectedCase = PiecePosition.transformNumberToColumn(indexColumn + 1) + (indexRow + 1);
+
+    if (potentialsMovements.includes(selectedCase)) {
+      var pieceOnPreviousBoard = this.board.pieces.findIndex(
+        (piece: ChessPiece) =>
+          piece.position.row == parseInt(this.selectedPiece[1]) &&
+          piece.position.column == this.selectedPiece[0]
+      );
+
+      this.selectedPiece = selectedCase;
+
+      this.board.pieces[pieceOnPreviousBoard].position.column = this
+        .selectedPiece[0] as PositionColumnPiece;
+      this.board.pieces[pieceOnPreviousBoard].position.row = parseInt(
+        this.selectedPiece[1]
+      ) as PositionRowPiece;
+
       this.selectedPiece = '';
       this.potentialsMovements = [];
     }

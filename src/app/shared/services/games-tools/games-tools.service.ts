@@ -5,15 +5,15 @@ import { KnightPiece } from '../../models/pieces/knight.model';
 import { BishopPiece } from '../../models/pieces/bishop.model';
 import { KingPiece } from '../../models/pieces/king.model';
 import { QueenPiece } from '../../models/pieces/queen.model';
-import { ChessPiece } from '../../models/piece.model';
+import { AllChessPieces, ChessPiece } from '../../models/piece.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GamesToolsService {
-  constructor() {}
+  constructor() { }
 
-  static getDefaultStartingPosition(): ChessPiece[] {
+  static getDefaultStartingPosition(): AllChessPieces[] {
     return [
       new PoundPiece({ row: 2, column: 'A' }, 'white'),
       new PoundPiece({ row: 2, column: 'B' }, 'white'),
@@ -30,7 +30,7 @@ export class GamesToolsService {
       new BishopPiece({ row: 1, column: 'C' }, 'white'),
       new BishopPiece({ row: 1, column: 'F' }, 'white'),
       new KingPiece({ row: 1, column: 'D' }, 'white'),
-      new QueenPiece({ row: 1, column: 'E' }, 'white'),
+      new QueenPiece({ row: 4, column: 'E' }, 'white'),
       new PoundPiece({ row: 7, column: 'A' }, 'black'),
       new PoundPiece({ row: 7, column: 'B' }, 'black'),
       new PoundPiece({ row: 7, column: 'C' }, 'black'),
