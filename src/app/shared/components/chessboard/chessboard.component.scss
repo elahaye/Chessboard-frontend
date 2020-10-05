@@ -79,12 +79,12 @@ $green-backround: rgba(63, 243, 132, 0.548);
       }
     }
     .row:nth-child(odd) {
-      .square:nth-child(odd) {
+      .square:nth-child(even) {
         background-color: #{$black_case};
       }
     }
     .row:nth-child(even) {
-      .square:nth-child(even) {
+      .square:nth-child(odd) {
         background-color: #{$black_case};
       }
     }
@@ -93,6 +93,12 @@ $green-backround: rgba(63, 243, 132, 0.548);
       width: calc(#{$square_size} - #{$border_size} * 2);
       height: calc(#{$square_size} - #{$border_size} * 2);
       position: absolute;
+      cursor: pointer;
+
+      &.unavailable {
+        pointer-events: none;
+        cursor: default;
+      }
     }
   }
 }

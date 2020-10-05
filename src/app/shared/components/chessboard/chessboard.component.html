@@ -7,9 +7,13 @@
   </div>
   <div id="boardInner">
     <!-- 32 Pieces -->
-    <img *ngFor="let chessPiece of board.pieces" [attr.src]="'/assets/images/' + chessPiece.img + '.png'"
-      [alt]="chessPiece.img" [style.margin-left.px]="chessPiece.position.column | findColumn"
-      [style.margin-top.px]="chessPiece.position.row | findRow" (click)="pieceOnClick(chessPiece)" />
+    <div class="list-image">
+      <img *ngFor="let chessPiece of board.pieces" [attr.src]="'/assets/images/' + chessPiece.img + '.png'"
+        [alt]="chessPiece.img" [style.margin-left.px]="chessPiece.position.column | findColumn"
+        [style.margin-top.px]="chessPiece.position.row | findRow" (click)="pieceOnClick(chessPiece)"
+        [ngClass]="{ unavailable: turn !== chessPiece.color }" />
+    </div>
+
     <!-- 64 Squares of the board-->
     <div *ngFor="let i of arrayOne(8); let indexRow = index" class="row">
       <div *ngFor="let j of arrayOne(8); let indexColumn = index" class="square" [ngClass]="{
@@ -25,7 +29,7 @@
             (indexRow
             | getPosition: indexColumn
             | availableMovements: potentialAttacks)
-        }" (click)="availableMovementsOnClick(indexRow, indexColumn, potentialsMovements)"></div>
+        }" (click)="availableMovementsOnClick(indexRow, indexColumn, potentialsMovements, potentialAttacks)"></div>
     </div>
   </div>
 </div>

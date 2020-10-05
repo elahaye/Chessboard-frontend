@@ -16,16 +16,20 @@ import { GamesToolsService } from '../../services/games-tools/games-tools.servic
 export class ChessboardComponent implements OnInit, AfterViewInit {
   letters: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   numbers: string[] = ['1', '2', '3', '4', '5', '6', '7', '8'];
-  status: boolean = false;
 
   board: ChessBoard;
+  selectedCase: string;
 
+  @Input()
+  turn: "white" | "black" = "white";
   @Input()
   selectedPiece: string;
   @Input()
   potentialsMovements: string[] = [];
   @Input()
   potentialAttacks: string[] = [];
+  @Input()
+  defeatedPieces: Array<ChessPiece> = [];
 
   arrayOne(n: number): any[] {
     return Array(n);
@@ -40,34 +44,45 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() { }
 
   pieceOnClick(chessPiece: ChessPiece) {
-    this.selectedPiece = chessPiece.position.column + chessPiece.position.row;
+    if (chessPiece.color == this.turn) {
+      this.selectedPiece = chessPiece.position.column + chessPiece.position.row;
+      var availablesMovements = chessPiece.getAvailableMovement(this.board);
+      this.potentialsMovements = [];
+      this.potentialAttacks = [];
 
-    var availablesMovements = chessPiece.getAvailableMovement(this.board);
-    this.potentialsMovements = [];
-    this.potentialAttacks = [];
-
-    for (let i = 0; i < availablesMovements[0].length; i++) {
-      this.potentialsMovements.push(
-        availablesMovements[0][i].column + availablesMovements[0][i].row
-      );
-    }
-    for (let i = 0; i < availablesMovements[1].length; i++) {
-      this.potentialAttacks.push(
-        availablesMovements[1][i].column + availablesMovements[1][i].row
-      );
+      for (let i = 0; i < availablesMovements[0].length; i++) {
+        this.potentialsMovements.push(
+          availablesMovements[0][i].column + availablesMovements[0][i].row
+        );
+      }
+      for (let i = 0; i < availablesMovements[1].length; i++) {
+        this.potentialAttacks.push(
+          availablesMovements[1][i].column + availablesMovements[1][i].row
+        );
+      }
     }
   }
 
-  availableMovementsOnClick(indexRow: number, indexColumn: number, potentialsMovements: string[]) {
-    let selectedCase = PiecePosition.transformNumberToColumn(indexColumn + 1) + (indexRow + 1);
+  availableMovementsOnClick(indexRow: number, indexColumn: number, potentialsMovements: string[], potentialAttacks: string[]) {
+    if (!this.selectedPiece) {
+      return;
+    }
+    this.selectedCase = PiecePosition.transformNumberToColumn(indexColumn + 1) + (indexRow + 1);
 
-    if (potentialsMovements.includes(selectedCase)) {
-      var pieceOnPreviousBoard = this.board.pieces.findIndex(
-        (piece: ChessPiece) =>
-          piece.position.row == parseInt(this.selectedPiece[1]) &&
-          piece.position.column == this.selectedPiece[0]
-      );
+    this.potentialMovementsAndAttacks(potentialsMovements, potentialAttacks, this.selectedCase);
+  }
 
+  potentialMovementsAndAttacks(potentialsMovements: string[], potentialAttacks: string[], selectedCase: string) {
+
+    if (potentialsMovements.includes(this.selectedCase) || potentialAttacks.includes(selectedCase)) {
+
+      if (potentialAttacks.includes(selectedCase)) {
+        let defeatedPiece = this.findIndexOnBoard(this.selectedCase);
+        this.defeatedPieces.push(this.board.pieces[defeatedPiece]);
+        this.board.pieces.splice(defeatedPiece, 1);
+      }
+
+      let pieceOnPreviousBoard = this.findIndexOnBoard(this.selectedPiece);
       this.selectedPiece = selectedCase;
 
       this.board.pieces[pieceOnPreviousBoard].position.column = this
@@ -79,6 +94,16 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
       this.selectedPiece = '';
       this.potentialsMovements = [];
       this.potentialAttacks = [];
+
+      this.turn = this.turn === "white" ? "black" : "white";
     }
+  }
+
+  findIndexOnBoard(selectedPiece: string) {
+    return this.board.pieces.findIndex(
+      (piece: ChessPiece) =>
+        piece.position.row == parseInt(selectedPiece[1]) &&
+        piece.position.column == selectedPiece[0]
+    );
   }
 }
