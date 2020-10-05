@@ -11,19 +11,25 @@ export class KnightPiece extends ChessPiece implements PieceInterface {
     this.setImage();
   }
 
-  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {
-    const availablePositionUpward = this.getAvailablePosition(
-      currentBoard,
-      1,
-      8
-    );
-    const availablePositionDownward = this.getAvailablePosition(
-      currentBoard,
-      -1,
-      1
-    );
+  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[][] {
+    let movements: Array<PiecePosition[]> = [];
 
-    return availablePositionUpward.concat(availablePositionDownward);
+    for (let i = 0; i < 2; i++) {
+      const availablePositionUpward = this.getAvailablePosition(
+        currentBoard,
+        1,
+        8
+      )[i];
+      const availablePositionDownward = this.getAvailablePosition(
+        currentBoard,
+        -1,
+        1
+      )[i];
+
+      movements.push(availablePositionUpward.concat(availablePositionDownward));
+    }
+
+    return movements;
   }
 
   /**
@@ -36,8 +42,11 @@ export class KnightPiece extends ChessPiece implements PieceInterface {
     currentBoard: ChessBoard,
     direction: -1 | 1,
     maximum: 1 | 8
-  ): PiecePosition[] {
+  ): Array<PiecePosition[]> {
     let availableMovement: PiecePosition[] = [];
+    let potentialAttack: PiecePosition[] = [];
+    let movements: Array<PiecePosition[]> = [];
+
     let currentColumnMiddle = PiecePosition.transformColumnToNumber(
       this.position.column
     );
@@ -64,17 +73,22 @@ export class KnightPiece extends ChessPiece implements PieceInterface {
       this.getAvailableCase(
         currentBoard,
         availableMovement,
+        potentialAttack,
         rowColumnMovements[i]['row'],
         rowColumnMovements[i]['column']
       );
     }
 
-    return availableMovement;
+    movements.push(availableMovement);
+    movements.push(potentialAttack);
+
+    return movements;
   }
 
   protected getAvailableCase(
     currentBoard: ChessBoard,
     availableMovement: PiecePosition[],
+    potentialAttack: PiecePosition[],
     rowDirection: number,
     columnDirection: number
   ) {
@@ -85,9 +99,13 @@ export class KnightPiece extends ChessPiece implements PieceInterface {
       rowDirection,
       columnDirection
     );
+    const otherPiece = currentBoard.getPieceInPosition(positionToCheck);
 
     if (!currentBoard.hasPieceInPosition(positionToCheck)) {
       availableMovement.push(positionToCheck);
+    }
+    else if (otherPiece !== undefined && otherPiece.color !== this.color) {
+      potentialAttack.push(positionToCheck)
     }
     currentColumnMiddle = currentBoard.hasPieceInPosition(positionToCheck)
       ? -1

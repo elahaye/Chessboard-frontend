@@ -44,10 +44,16 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
 
     var availablesMovements = chessPiece.getAvailableMovement(this.board);
     this.potentialsMovements = [];
+    this.potentialAttacks = [];
 
-    for (let i = 0; i < availablesMovements.length; i++) {
+    for (let i = 0; i < availablesMovements[0].length; i++) {
       this.potentialsMovements.push(
-        availablesMovements[i].column + availablesMovements[i].row
+        availablesMovements[0][i].column + availablesMovements[0][i].row
+      );
+    }
+    for (let i = 0; i < availablesMovements[1].length; i++) {
+      this.potentialAttacks.push(
+        availablesMovements[1][i].column + availablesMovements[1][i].row
       );
     }
   }
@@ -72,6 +78,7 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
 
       this.selectedPiece = '';
       this.potentialsMovements = [];
+      this.potentialAttacks = [];
     }
   }
 }

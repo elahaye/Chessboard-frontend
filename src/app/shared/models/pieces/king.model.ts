@@ -11,21 +11,26 @@ export class KingPiece extends ChessPiece implements PieceInterface {
     this.setImage();
   }
 
-  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {
-    const availablePositionUpward = this.getAvailablePosition(
-      currentBoard,
-      1,
-      8
-    );
-    const availablePositionDownward = this.getAvailablePosition(
-      currentBoard,
-      -1,
-      1
-    );
+  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[][] {
+    let movements: Array<PiecePosition[]> = [];
 
-    return availablePositionUpward.concat(availablePositionDownward);
+    for (let i = 0; i < 2; i++) {
+      const availablePositionUpward = this.getAvailablePosition(
+        currentBoard,
+        1,
+        8
+      )[i];
+      const availablePositionDownward = this.getAvailablePosition(
+        currentBoard,
+        -1,
+        1
+      )[i];
+
+      movements.push(availablePositionUpward.concat(availablePositionDownward));
+    }
+
+    return movements;
   }
-
   /**
    * Return the available position for the queen for a direction (up/down) on the board
    * @param currentBoard All the current piece on the board
@@ -36,8 +41,10 @@ export class KingPiece extends ChessPiece implements PieceInterface {
     currentBoard: ChessBoard,
     direction: -1 | 1,
     maximum: 1 | 8
-  ): PiecePosition[] {
+  ): Array<PiecePosition[]> {
     const availableMovement: PiecePosition[] = [];
+    const potentialAttack: PiecePosition[] = [];
+    let movements: Array<PiecePosition[]> = [];
 
     // Vertical and Diagonal movements
     let currentColumnLeft =
@@ -57,8 +64,13 @@ export class KingPiece extends ChessPiece implements PieceInterface {
           this.position.row + direction,
           currentColumnLeft
         );
+        const otherPieceLeft = currentBoard.getPieceInPosition(positionLeftToCheck);
+
         if (!currentBoard.hasPieceInPosition(positionLeftToCheck)) {
           availableMovement.push(positionLeftToCheck);
+        }
+        else if (otherPieceLeft !== undefined && otherPieceLeft.color !== this.color) {
+          potentialAttack.push(positionLeftToCheck);
         }
         currentColumnLeft = currentBoard.hasPieceInPosition(positionLeftToCheck)
           ? -1
@@ -69,8 +81,13 @@ export class KingPiece extends ChessPiece implements PieceInterface {
           this.position.row + direction,
           currentColumnMiddle
         );
+        const otherPieceMiddle = currentBoard.getPieceInPosition(positionMiddleToCheck);
+
         if (!currentBoard.hasPieceInPosition(positionMiddleToCheck)) {
           availableMovement.push(positionMiddleToCheck);
+        }
+        else if (otherPieceMiddle !== undefined && otherPieceMiddle.color !== this.color) {
+          potentialAttack.push(positionMiddleToCheck);
         }
         currentColumnMiddle = currentBoard.hasPieceInPosition(
           positionMiddleToCheck
@@ -83,6 +100,8 @@ export class KingPiece extends ChessPiece implements PieceInterface {
           this.position.row + direction,
           currentColumnRight
         );
+        const otherPieceRight = currentBoard.getPieceInPosition(positionRightToCheck);
+
         currentColumnRight = currentBoard.hasPieceInPosition(
           positionRightToCheck
         )
@@ -90,6 +109,9 @@ export class KingPiece extends ChessPiece implements PieceInterface {
           : currentColumnRight + 1;
         if (!currentBoard.hasPieceInPosition(positionRightToCheck)) {
           availableMovement.push(positionRightToCheck);
+        }
+        else if (otherPieceRight !== undefined && otherPieceRight.color !== this.color) {
+          potentialAttack.push(positionRightToCheck);
         }
       }
     }
@@ -102,15 +124,23 @@ export class KingPiece extends ChessPiece implements PieceInterface {
         this.position.row,
         currentColumnMiddle
       );
+      const otherPiece = currentBoard.getPieceInPosition(positionToCheck);
+
       if (!currentBoard.hasPieceInPosition(positionToCheck)) {
         availableMovement.push(positionToCheck);
+      }
+      else if (otherPiece !== undefined && otherPiece.color !== this.color) {
+        potentialAttack.push(positionToCheck);
       }
       currentColumnMiddle = currentBoard.hasPieceInPosition(positionToCheck)
         ? -1
         : currentColumnMiddle;
     }
 
-    return availableMovement;
+    movements.push(availableMovement);
+    movements.push(potentialAttack);
+
+    return movements;
   }
 
   /**

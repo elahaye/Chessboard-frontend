@@ -45,7 +45,7 @@ export class ChessPiece implements PieceInterface {
     this._img = `${this._color}_${this._type}`;
   }
 
-  getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {
+  getAvailableMovement(currentBoard: ChessBoard): PiecePosition[][] {
     return [];
   }
 }
