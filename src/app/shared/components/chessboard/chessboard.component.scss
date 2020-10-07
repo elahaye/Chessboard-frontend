@@ -4,6 +4,9 @@ $border_size: 10px;
 
 // Colors
 $black_case: rgba(0, 0, 0, 0.6);
+$red-border: rgba(207, 0, 15, 1);
+$green-border: rgb(63, 243, 132);
+$green-backround: rgba(63, 243, 132, 0.548);
 
 #boardOuter {
   height: calc(
@@ -44,8 +47,8 @@ $black_case: rgba(0, 0, 0, 0.6);
   }
 
   #boardInner {
-    width: calc(#{$square_size} * 8);
-    height: calc(#{$square_size} * 8);
+    width: calc(#{$square_size} * 8 + 16px);
+    height: calc(#{$square_size} * 8 + 16px);
     display: inline-block;
     border: solid #{$border_size} black;
     position: relative;
@@ -59,24 +62,43 @@ $black_case: rgba(0, 0, 0, 0.6);
         width: calc(#{$square_size});
         height: calc(#{$square_size});
         display: inline-block;
+      }
+
+      .notSelectedPiece {
         border: 1px solid black;
+      }
+      .selectedPiece {
+        border: 5px solid #{$green-border};
+      }
+      .availableMovements {
+        border: 5px solid #{$green-border};
+        background-color: #{$green-backround} !important;
+      }
+      .potentialAttacks {
+        border: 5px solid #{$red-border};
       }
     }
     .row:nth-child(odd) {
-      .square:nth-child(odd) {
+      .square:nth-child(even) {
         background-color: #{$black_case};
       }
     }
     .row:nth-child(even) {
-      .square:nth-child(even) {
+      .square:nth-child(odd) {
         background-color: #{$black_case};
       }
     }
 
     img {
-      width: calc(#{$square_size} - #{$border_size} * 4);
-      height: calc(#{$square_size} - #{$border_size} * 4);
+      width: calc(#{$square_size} - #{$border_size} * 2);
+      height: calc(#{$square_size} - #{$border_size} * 2);
       position: absolute;
+      cursor: pointer;
+
+      &.unavailable {
+        pointer-events: none;
+        cursor: default;
+      }
     }
   }
 }

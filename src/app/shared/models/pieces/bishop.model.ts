@@ -11,19 +11,25 @@ export class BishopPiece extends ChessPiece implements PieceInterface {
     this.setImage();
   }
 
-  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {
-    const availablePositionUpward = this.getAvailablePosition(
-      currentBoard,
-      1,
-      8
-    );
-    const availablePositionDownward = this.getAvailablePosition(
-      currentBoard,
-      -1,
-      1
-    );
+  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[][] {
+    let movements: Array<PiecePosition[]> = [];
 
-    return availablePositionUpward.concat(availablePositionDownward);
+    for (let i = 0; i < 2; i++) {
+      const availablePositionUpward = this.getAvailablePosition(
+        currentBoard,
+        1,
+        8
+      )[i];
+      const availablePositionDownward = this.getAvailablePosition(
+        currentBoard,
+        -1,
+        1
+      )[i];
+
+      movements.push(availablePositionUpward.concat(availablePositionDownward));
+    }
+
+    return movements;
   }
 
   /**
@@ -36,8 +42,10 @@ export class BishopPiece extends ChessPiece implements PieceInterface {
     currentBoard: ChessBoard,
     direction: -1 | 1,
     maximum: 1 | 8
-  ): PiecePosition[] {
+  ): Array<PiecePosition[]> {
     const availableMovement: PiecePosition[] = [];
+    const potentialAttack: PiecePosition[] = [];
+    let movements: Array<PiecePosition[]> = [];
 
     // // Vertical and Diagonal movements
     let currentColumnLeft =
@@ -55,8 +63,13 @@ export class BishopPiece extends ChessPiece implements PieceInterface {
           i,
           currentColumnLeft
         );
+        const otherPieceLeft = currentBoard.getPieceInPosition(positionLeftToCheck);
+
         if (!currentBoard.hasPieceInPosition(positionLeftToCheck)) {
           availableMovement.push(positionLeftToCheck);
+        }
+        else if (otherPieceLeft !== undefined && otherPieceLeft.color !== this.color) {
+          potentialAttack.push(positionLeftToCheck);
         }
         currentColumnLeft = currentBoard.hasPieceInPosition(positionLeftToCheck)
           ? -1
@@ -67,6 +80,8 @@ export class BishopPiece extends ChessPiece implements PieceInterface {
           i,
           currentColumnRight
         );
+        const otherPieceRight = currentBoard.getPieceInPosition(positionRightToCheck);
+
         currentColumnRight = currentBoard.hasPieceInPosition(
           positionRightToCheck
         )
@@ -75,9 +90,15 @@ export class BishopPiece extends ChessPiece implements PieceInterface {
         if (!currentBoard.hasPieceInPosition(positionRightToCheck)) {
           availableMovement.push(positionRightToCheck);
         }
+        else if (otherPieceRight !== undefined && otherPieceRight.color !== this.color) {
+          potentialAttack.push(positionRightToCheck);
+        }
       }
     }
-    return availableMovement;
+    movements.push(availableMovement);
+    movements.push(potentialAttack);
+
+    return movements;
   }
 
   /**

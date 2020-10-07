@@ -11,19 +11,25 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
     this.setImage();
   }
 
-  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {
-    const availablePositionUpward = this.getAvailablePosition(
-      currentBoard,
-      1,
-      8
-    );
-    const availablePositionDownward = this.getAvailablePosition(
-      currentBoard,
-      -1,
-      1
-    );
+  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[][] {
+    let movements: Array<PiecePosition[]> = [];
 
-    return availablePositionUpward.concat(availablePositionDownward);
+    for (let i = 0; i < 2; i++) {
+      const availablePositionUpward = this.getAvailablePosition(
+        currentBoard,
+        1,
+        8
+      )[i];
+      const availablePositionDownward = this.getAvailablePosition(
+        currentBoard,
+        -1,
+        1
+      )[i];
+
+      movements.push(availablePositionUpward.concat(availablePositionDownward));
+    }
+
+    return movements;
   }
 
   /**
@@ -36,12 +42,15 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
     currentBoard: ChessBoard,
     direction: -1 | 1,
     maximum: 1 | 8
-  ): PiecePosition[] {
+  ): Array<PiecePosition[]> {
     const availableMovement: PiecePosition[] = [];
+    const potentialAttack: PiecePosition[] = [];
+    let movements: Array<PiecePosition[]> = [];
 
     // Vertical and Diagonal movements
     let currentColumnLeft =
       PiecePosition.transformColumnToNumber(this.position.column) - 1;
+
     let currentColumnMiddle = PiecePosition.transformColumnToNumber(
       this.position.column
     );
@@ -58,8 +67,13 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
           i,
           currentColumnLeft
         );
+        const otherPieceLeft = currentBoard.getPieceInPosition(positionLeftToCheck);
+
         if (!currentBoard.hasPieceInPosition(positionLeftToCheck)) {
           availableMovement.push(positionLeftToCheck);
+        }
+        else if (otherPieceLeft !== undefined && otherPieceLeft.color !== this.color) {
+          potentialAttack.push(positionLeftToCheck);
         }
         currentColumnLeft = currentBoard.hasPieceInPosition(positionLeftToCheck)
           ? -1
@@ -70,8 +84,13 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
           i,
           currentColumnMiddle
         );
+        const otherPieceMiddle = currentBoard.getPieceInPosition(positionMiddleToCheck);
+
         if (!currentBoard.hasPieceInPosition(positionMiddleToCheck)) {
           availableMovement.push(positionMiddleToCheck);
+        }
+        else if (otherPieceMiddle !== undefined && otherPieceMiddle.color !== this.color) {
+          potentialAttack.push(positionMiddleToCheck);
         }
         currentColumnMiddle = currentBoard.hasPieceInPosition(
           positionMiddleToCheck
@@ -84,6 +103,8 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
           i,
           currentColumnRight
         );
+        const otherPieceRight = currentBoard.getPieceInPosition(positionRightToCheck);
+
         currentColumnRight = currentBoard.hasPieceInPosition(
           positionRightToCheck
         )
@@ -91,6 +112,9 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
           : currentColumnRight + 1;
         if (!currentBoard.hasPieceInPosition(positionRightToCheck)) {
           availableMovement.push(positionRightToCheck);
+        }
+        else if (otherPieceRight !== undefined && otherPieceRight.color !== this.color) {
+          potentialAttack.push(positionRightToCheck);
         }
       }
     }
@@ -105,8 +129,13 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
     ) {
       if (this.checkIfAccessible(currentColumnMiddle)) {
         const positionToCheck = this.getPositionToCheck(this.position.row, j);
+        const otherPiece = currentBoard.getPieceInPosition(positionToCheck);
+
         if (!currentBoard.hasPieceInPosition(positionToCheck)) {
           availableMovement.push(positionToCheck);
+        }
+        else if (otherPiece !== undefined && otherPiece.color !== this.color) {
+          potentialAttack.push(positionToCheck);
         }
         currentColumnMiddle = currentBoard.hasPieceInPosition(positionToCheck)
           ? -1
@@ -114,7 +143,10 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
       }
     }
 
-    return availableMovement;
+    movements.push(availableMovement);
+    movements.push(potentialAttack);
+
+    return movements;
   }
 
   /**

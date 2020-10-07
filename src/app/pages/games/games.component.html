@@ -1,3 +1,8 @@
-<app-chessboard *ngIf="currentGame" [board]="currentGame.board"></app-chessboard>
+<button
+  pButton
+  type="button"
+  label="Start new game"
+  (click)="startNewGame()"
+></button>
 
-<button pButton type="button" label="Start new game" (click)="startNewGame()"></button>
+<app-chessboard></app-chessboard>

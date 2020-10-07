@@ -11,19 +11,25 @@ export class RookPiece extends ChessPiece implements PieceInterface {
     this.setImage();
   }
 
-  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {
-    const availablePositionUpward = this.getAvailablePosition(
-      currentBoard,
-      1,
-      8
-    );
-    const availablePositionDownward = this.getAvailablePosition(
-      currentBoard,
-      -1,
-      1
-    );
+  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[][] {
+    let movements: Array<PiecePosition[]> = [];
 
-    return availablePositionUpward.concat(availablePositionDownward);
+    for (let i = 0; i < 2; i++) {
+      const availablePositionUpward = this.getAvailablePosition(
+        currentBoard,
+        1,
+        8
+      )[i];
+      const availablePositionDownward = this.getAvailablePosition(
+        currentBoard,
+        -1,
+        1
+      )[i];
+
+      movements.push(availablePositionUpward.concat(availablePositionDownward));
+    }
+
+    return movements;
   }
 
   /**
@@ -36,8 +42,10 @@ export class RookPiece extends ChessPiece implements PieceInterface {
     currentBoard: ChessBoard,
     direction: -1 | 1,
     maximum: 1 | 8
-  ): PiecePosition[] {
+  ): Array<PiecePosition[]> {
     const availableMovement: PiecePosition[] = [];
+    const potentialAttack: PiecePosition[] = [];
+    let movements: Array<PiecePosition[]> = [];
 
     // Vertical and Diagonal movements
     let currentColumnMiddle = PiecePosition.transformColumnToNumber(
@@ -54,8 +62,13 @@ export class RookPiece extends ChessPiece implements PieceInterface {
           i,
           currentColumnMiddle
         );
+        const otherPieceMiddle = currentBoard.getPieceInPosition(positionMiddleToCheck);
+
         if (!currentBoard.hasPieceInPosition(positionMiddleToCheck)) {
           availableMovement.push(positionMiddleToCheck);
+        }
+        else if (otherPieceMiddle !== undefined && otherPieceMiddle.color !== this.color) {
+          potentialAttack.push(positionMiddleToCheck);
         }
         currentColumnMiddle = currentBoard.hasPieceInPosition(
           positionMiddleToCheck
@@ -75,8 +88,13 @@ export class RookPiece extends ChessPiece implements PieceInterface {
     ) {
       if (this.checkIfAccessible(currentColumnMiddle)) {
         const positionToCheck = this.getPositionToCheck(this.position.row, j);
+        const otherPiece = currentBoard.getPieceInPosition(positionToCheck);
+
         if (!currentBoard.hasPieceInPosition(positionToCheck)) {
           availableMovement.push(positionToCheck);
+        }
+        else if (otherPiece !== undefined && otherPiece.color !== this.color) {
+          potentialAttack.push(positionToCheck);
         }
         currentColumnMiddle = currentBoard.hasPieceInPosition(positionToCheck)
           ? -1
@@ -84,7 +102,10 @@ export class RookPiece extends ChessPiece implements PieceInterface {
       }
     }
 
-    return availableMovement;
+    movements.push(availableMovement);
+    movements.push(potentialAttack);
+
+    return movements;
   }
 
   /**
