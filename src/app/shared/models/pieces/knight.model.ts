@@ -99,29 +99,9 @@ export class KnightPiece extends ChessPiece implements PieceInterface {
       rowDirection,
       columnDirection
     );
-    const otherPiece = currentBoard.getPieceInPosition(positionToCheck);
-
-    if (!currentBoard.hasPieceInPosition(positionToCheck)) {
-      availableMovement.push(positionToCheck);
-    }
-    else if (otherPiece !== undefined && otherPiece.color !== this.color) {
-      potentialAttack.push(positionToCheck)
-    }
+    this.getMovements(positionToCheck, currentBoard, availableMovement, potentialAttack);
     currentColumnMiddle = currentBoard.hasPieceInPosition(positionToCheck)
       ? -1
       : currentColumnMiddle;
-  }
-
-  /**
-   * Build a position based on the iteration for the row and the current column for the column
-   * @param i The current iteration of the for
-   * @param currentColumn The current column that we are checking
-   * @return The formatted piece position
-   */
-  private getPositionToCheck(i: number, currentColumn: number): PiecePosition {
-    return {
-      row: i as PositionRowPiece,
-      column: PiecePosition.transformNumberToColumn(currentColumn),
-    };
   }
 }

@@ -28,7 +28,6 @@ export class KingPiece extends ChessPiece implements PieceInterface {
 
       movements.push(availablePositionUpward.concat(availablePositionDownward));
     }
-
     return movements;
   }
   /**
@@ -46,7 +45,6 @@ export class KingPiece extends ChessPiece implements PieceInterface {
     const potentialAttack: PiecePosition[] = [];
     let movements: Array<PiecePosition[]> = [];
 
-    // Vertical and Diagonal movements
     let currentColumnLeft =
       PiecePosition.transformColumnToNumber(this.position.column) - 1;
     let currentColumnMiddle = PiecePosition.transformColumnToNumber(
@@ -59,60 +57,43 @@ export class KingPiece extends ChessPiece implements PieceInterface {
       1 <= this.position.row + direction &&
       this.position.row + direction <= 8
     ) {
+      // Diagonal movements
       if (this.checkIfAccessible(currentColumnLeft)) {
         const positionLeftToCheck = this.getPositionToCheck(
           this.position.row + direction,
           currentColumnLeft
         );
-        const otherPieceLeft = currentBoard.getPieceInPosition(positionLeftToCheck);
+        this.getMovements(positionLeftToCheck, currentBoard, availableMovement, potentialAttack);
 
-        if (!currentBoard.hasPieceInPosition(positionLeftToCheck)) {
-          availableMovement.push(positionLeftToCheck);
-        }
-        else if (otherPieceLeft !== undefined && otherPieceLeft.color !== this.color) {
-          potentialAttack.push(positionLeftToCheck);
-        }
         currentColumnLeft = currentBoard.hasPieceInPosition(positionLeftToCheck)
           ? -1
           : currentColumnLeft - 1;
-      }
-      if (this.checkIfAccessible(currentColumnMiddle)) {
-        const positionMiddleToCheck = this.getPositionToCheck(
-          this.position.row + direction,
-          currentColumnMiddle
-        );
-        const otherPieceMiddle = currentBoard.getPieceInPosition(positionMiddleToCheck);
-
-        if (!currentBoard.hasPieceInPosition(positionMiddleToCheck)) {
-          availableMovement.push(positionMiddleToCheck);
-        }
-        else if (otherPieceMiddle !== undefined && otherPieceMiddle.color !== this.color) {
-          potentialAttack.push(positionMiddleToCheck);
-        }
-        currentColumnMiddle = currentBoard.hasPieceInPosition(
-          positionMiddleToCheck
-        )
-          ? -1
-          : currentColumnMiddle;
       }
       if (this.checkIfAccessible(currentColumnRight)) {
         const positionRightToCheck = this.getPositionToCheck(
           this.position.row + direction,
           currentColumnRight
         );
-        const otherPieceRight = currentBoard.getPieceInPosition(positionRightToCheck);
+        this.getMovements(positionRightToCheck, currentBoard, availableMovement, potentialAttack);
 
         currentColumnRight = currentBoard.hasPieceInPosition(
           positionRightToCheck
         )
           ? -1
           : currentColumnRight + 1;
-        if (!currentBoard.hasPieceInPosition(positionRightToCheck)) {
-          availableMovement.push(positionRightToCheck);
-        }
-        else if (otherPieceRight !== undefined && otherPieceRight.color !== this.color) {
-          potentialAttack.push(positionRightToCheck);
-        }
+      }
+      // Vertical movements
+      if (this.checkIfAccessible(currentColumnMiddle)) {
+        const positionMiddleToCheck = this.getPositionToCheck(
+          this.position.row + direction,
+          currentColumnMiddle
+        );
+        this.getMovements(positionMiddleToCheck, currentBoard, availableMovement, potentialAttack);
+        currentColumnMiddle = currentBoard.hasPieceInPosition(
+          positionMiddleToCheck
+        )
+          ? -1
+          : currentColumnMiddle;
       }
     }
 
@@ -124,14 +105,7 @@ export class KingPiece extends ChessPiece implements PieceInterface {
         this.position.row,
         currentColumnMiddle
       );
-      const otherPiece = currentBoard.getPieceInPosition(positionToCheck);
-
-      if (!currentBoard.hasPieceInPosition(positionToCheck)) {
-        availableMovement.push(positionToCheck);
-      }
-      else if (otherPiece !== undefined && otherPiece.color !== this.color) {
-        potentialAttack.push(positionToCheck);
-      }
+      this.getMovements(positionToCheck, currentBoard, availableMovement, potentialAttack);
       currentColumnMiddle = currentBoard.hasPieceInPosition(positionToCheck)
         ? -1
         : currentColumnMiddle;
@@ -141,29 +115,5 @@ export class KingPiece extends ChessPiece implements PieceInterface {
     movements.push(potentialAttack);
 
     return movements;
-  }
-
-  /**
-   * Check if a position should be checked
-   * @param currentColumn The current column to check (-1 = should not checked)
-   */
-  private checkIfAccessible(currentColumn: number) {
-    return (
-      currentColumn !== -1 &&
-      PiecePosition.transformNumberToColumn(currentColumn) !== undefined
-    );
-  }
-
-  /**
-   * Build a position based on the iteration for the row and the current column for the column
-   * @param i The current iteration of the for
-   * @param currentColumn The current column that we are checking
-   * @return The formatted piece position
-   */
-  private getPositionToCheck(i: number, currentColumn: number): PiecePosition {
-    return {
-      row: i as PositionRowPiece,
-      column: PiecePosition.transformNumberToColumn(currentColumn),
-    };
   }
 }
