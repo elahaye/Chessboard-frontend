@@ -10,4 +10,4 @@ import { ChessboardModule } from 'src/app/shared/components/chessboard/chessboar
   declarations: [GamesComponent],
   imports: [CommonModule, GamesRoutingModule, ButtonModule, ChessboardModule],
 })
-export class GamesModule {}
+export class GamesModule { }

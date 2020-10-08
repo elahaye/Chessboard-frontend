@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ChessBoard } from '../../models/board.model';
+import { ChessGame } from '../../models/game.model';
 import {
   PiecePosition,
   PositionColumnPiece,
@@ -13,7 +14,7 @@ import { GamesToolsService } from '../../services/games-tools/games-tools.servic
   templateUrl: './chessboard.component.html',
   styleUrls: ['./chessboard.component.scss'],
 })
-export class ChessboardComponent implements OnInit, AfterViewInit {
+export class ChessboardComponent implements OnInit, OnChanges {
   letters: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   numbers: string[] = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
@@ -31,13 +32,21 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
   @Input()
   defeatedPieces: Array<ChessPiece> = [];
 
+  @Input()
+  newGame: ChessGame;
+
   constructor() { }
 
   ngOnInit(): void {
     this.board = new ChessBoard(GamesToolsService.getDefaultStartingPosition());
   }
 
-  ngAfterViewInit() { }
+  ngOnChanges(): void {
+    // Reset the board when the player click on the restart button
+    if (this.newGame) {
+      this.board = this.newGame.board;
+    }
+  }
 
   /**
    * Show all the available movements and attacks when you click on a piece. All movements and attacks are stored in two arrays.
