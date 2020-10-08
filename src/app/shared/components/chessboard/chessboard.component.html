@@ -15,21 +15,21 @@
     </div>
 
     <!-- 64 Squares of the board-->
-    <div *ngFor="let i of arrayOne(8); let indexRow = index" class="row">
-      <div *ngFor="let j of arrayOne(8); let indexColumn = index" class="square" [ngClass]="{
+    <div *ngFor="let i of letters; let indexColumn = index" class="row">
+      <div *ngFor="let j of numbers; let indexRow = index" class="square" [ngClass]="{
           selectedPiece:
-            selectedPiece === (indexRow | getPosition: indexColumn),
+            selectedPiece === indexColumn + indexRow,
           notSelectedPiece:
-            selectedPiece !== (indexRow | getPosition: indexColumn),
+            selectedPiece !== indexColumn + indexRow,
           availableMovements:
-            (indexRow
-            | getPosition: indexColumn
+            (indexColumn
+            | getPosition: indexRow
             | availableMovements: potentialsMovements),
           potentialAttacks:
-            (indexRow
-            | getPosition: indexColumn
+            (indexColumn
+            | getPosition: indexRow
             | availableMovements: potentialAttacks)
-        }" (click)="availableMovementsOnClick(indexRow, indexColumn, potentialsMovements, potentialAttacks)"></div>
+        }" (click)="availableMovementsOnClick(indexColumn, indexRow, potentialsMovements, potentialAttacks)"></div>
     </div>
   </div>
 </div>

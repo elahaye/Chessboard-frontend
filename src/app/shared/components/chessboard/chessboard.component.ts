@@ -31,10 +31,6 @@ export class ChessboardComponent implements OnInit, AfterViewInit {
   @Input()
   defeatedPieces: Array<ChessPiece> = [];
 
-  arrayOne(n: number): any[] {
-    return Array(n);
-  }
-
   constructor() { }
 
   ngOnInit(): void {
