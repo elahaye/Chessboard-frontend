@@ -1,3 +1,9 @@
-<button pButton type="button" label="Start new game" (click)="startNewGame()"></button>
+<div id="buttons">
+  <button pButton type="button" label="Start new game" class="p-button-rounded p-button-danger"
+    (click)="startNewGame()"></button>
+  <button pButton pRipple type="button" icon="pi pi-replay" class="p-button-rounded p-button-secondary"
+    (click)="goBackOneMovement()"></button>
+</div>
 
-<app-chessboard [newGame]="currentGame"></app-chessboard>
+<app-chessboard [game]="game" [defeatedPieces]="defeatedPieces" [goBack]="goBack" [plays]="plays">
+</app-chessboard>

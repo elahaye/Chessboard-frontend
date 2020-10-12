@@ -1,35 +1,58 @@
-<div id="boardOuter">
-  <div id="letterContainer">
-    <div *ngFor="let letter of letters" class="labelLetter">{{ letter }}</div>
-  </div>
-  <div id="numberContainer">
-    <div *ngFor="let number of numbers" class="labelNumber">{{ number }}</div>
-  </div>
-  <div id="boardInner">
-    <!-- 32 Pieces -->
-    <div class="list-image">
-      <img *ngFor="let chessPiece of board.pieces" [attr.src]="'/assets/images/' + chessPiece.img + '.png'"
-        [alt]="chessPiece.img" [style.margin-left.px]="chessPiece.position.column | findColumn"
-        [style.margin-top.px]="chessPiece.position.row | findRow" (click)="pieceOnClick(chessPiece)"
-        [ngClass]="{ unavailable: turn !== chessPiece.color }" />
-    </div>
+<main>
 
-    <!-- 64 Squares of the board-->
-    <div *ngFor="let i of letters; let indexColumn = index" class="row">
-      <div *ngFor="let j of numbers; let indexRow = index" class="square" [ngClass]="{
-          selectedPiece:
-            selectedPiece === indexColumn + indexRow,
-          notSelectedPiece:
-            selectedPiece !== indexColumn + indexRow,
-          availableMovements:
-            (indexColumn
-            | getPosition: indexRow
-            | availableMovements: potentialsMovements),
-          potentialAttacks:
-            (indexColumn
-            | getPosition: indexRow
-            | availableMovements: potentialAttacks)
-        }" (click)="availableMovementsOnClick(indexColumn, indexRow, potentialsMovements, potentialAttacks)"></div>
+  <div class="piecesGraveyard">
+    <div class="list-image">
+      <ng-container *ngFor="let piece of defeatedPieces">
+        <img *ngIf="piece.color === 'white'" [attr.src]="'/assets/images/' + piece.img + '.png'" [alt]="piece.img" />
+      </ng-container>
     </div>
   </div>
-</div>
+
+  <div id="boardOuter">
+    <div id="letterContainer">
+      <div *ngFor="let letter of letters" class="labelLetter">{{ letter }}</div>
+    </div>
+    <div class="numberContainer">
+      <div *ngFor="let number of numbers" class="labelNumber">{{ number }}</div>
+    </div>
+    <div id="boardInner">
+      <!-- 32 Pieces -->
+      <div class="list-image">
+        <img *ngFor="let chessPiece of game.board.pieces" [attr.src]="'/assets/images/' + chessPiece.img + '.png'"
+          [alt]="chessPiece.img" [style.margin-left.px]="chessPiece.position.column | findColumn"
+          [style.margin-top.px]="chessPiece.position.row | findRow" (click)="pieceOnClick(chessPiece)"
+          [ngClass]="{ unavailable: turnColor !== chessPiece.color }" />
+      </div>
+
+      <!-- 64 Squares of the board-->
+      <div *ngFor="let i of letters; let indexColumn = index" class="row">
+        <div *ngFor="let j of numbers; let indexRow = index" class="square" [ngClass]="{
+            selectedPiece:
+            selectedPiecePosition === indexColumn + indexRow,
+            notSelectedPiece:
+            selectedPiecePosition !== indexColumn + indexRow,
+            availableMovements:
+              (indexColumn
+              | getPosition: indexRow
+              | availableMovements: potentialsMovements),
+            potentialAttacks:
+              (indexColumn
+              | getPosition: indexRow
+              | availableMovements: potentialAttacks)
+          }" (click)="availableMovementsOnClick(indexColumn, indexRow, potentialsMovements, potentialAttacks)"></div>
+      </div>
+    </div>
+    <div class="numberContainer">
+      <div *ngFor="let number of numbers" class="labelNumber"></div>
+    </div>
+  </div>
+
+  <div class="piecesGraveyard">
+    <div class="list-image">
+      <ng-container *ngFor="let piece of defeatedPieces">
+        <img *ngIf="piece.color === 'black'" [attr.src]="'/assets/images/' + piece.img + '.png'" [alt]="piece.img" />
+      </ng-container>
+    </div>
+  </div>
+
+</main>

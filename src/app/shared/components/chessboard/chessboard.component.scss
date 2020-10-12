@@ -8,14 +8,19 @@ $red-border: rgba(207, 0, 15, 1);
 $green-border: rgb(63, 243, 132);
 $green-backround: rgba(63, 243, 132, 0.548);
 
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 #boardOuter {
   height: calc(
     (#{$square_size} * 8) + (#{$square_size} / 2) + (#{$border_size} * 2)
   );
   width: calc(
-    (#{$square_size} * 8) + (#{$square_size} / 2) + (#{$border_size} * 2)
+    (#{$square_size} * 8) + (#{$square_size} / 2) * 2 + (#{$border_size} * 2)
   );
-  margin: auto;
 
   #letterContainer {
     width: calc(#{$square_size} * 8);
@@ -31,7 +36,7 @@ $green-backround: rgba(63, 243, 132, 0.548);
     }
   }
 
-  #numberContainer {
+  .numberContainer {
     width: calc(#{$square_size} / 2);
     height: calc(#{$square_size} * 8);
     display: inline-block;
@@ -102,3 +107,24 @@ $green-backround: rgba(63, 243, 132, 0.548);
     }
   }
 }
+
+.piecesGraveyard {
+  height: calc(
+    ((#{$square_size} * 8) / 2)
+  );
+  width: calc(
+    ((#{$square_size} * 2) / 2)
+  );
+  margin: auto 30px;
+  position: relative;
+  border: solid 3px black;
+  background-color: rgba(0, 0, 0, 0.082);
+
+  img {
+    width: calc(((#{$square_size} - 3px * 2)) / 2);
+    height: calc(((#{$square_size} - 3px * 2)) / 2);
+    cursor: none;
+  }
+}
+
+

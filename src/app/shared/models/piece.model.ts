@@ -9,8 +9,10 @@ import { KingPiece } from './pieces/king.model';
 import { PoundPiece } from './pieces/pound.model';
 import { RookPiece } from './pieces/rook.model';
 import { KnightPiece } from './pieces/knight.model';
+import { v4 as uuidv4 } from 'uuid';
 
 export class ChessPiece implements PieceInterface {
+  protected _id: string = uuidv4();
   protected _type: ChessPieceType;
   protected _position: PiecePosition;
   protected _color: ChessPieceColor;
@@ -19,6 +21,10 @@ export class ChessPiece implements PieceInterface {
   constructor(position: PiecePosition, color: ChessPieceColor) {
     this._position = position;
     this._color = color;
+  }
+
+  public get id() {
+    return this._id;
   }
 
   public get position() {
