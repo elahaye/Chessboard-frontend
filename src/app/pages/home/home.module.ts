@@ -10,4 +10,4 @@ import { ChessboardModule } from '../../shared/components/chessboard/chessboard.
   declarations: [HomeComponent],
   imports: [CommonModule, HomeRoutingModule, ChessboardModule],
 })
-export class HomeModule {}
+export class HomeModule { }

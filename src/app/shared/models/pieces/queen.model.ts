@@ -8,25 +8,28 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
   constructor(position: PiecePosition, color: ChessPieceColor) {
     super(position, color);
     this._type = 'queen';
-    if (this._color === 'white') {
-      this._img = 'white_queen';
-    } else if (this._color === 'black') {
-      this._img = 'black_queen';
-    }
+    this.setImage();
   }
 
-  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {
-    const availablePositionUpward = this.getAvailablePosition(
-      currentBoard,
-      1,
-      8
-    );
-    const availablePositionDownward = this.getAvailablePosition(
-      currentBoard,
-      -1,
-      1
-    );
-    return availablePositionUpward.concat(availablePositionDownward);
+  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[][] {
+    let movements: Array<PiecePosition[]> = [];
+
+    for (let i = 0; i < 2; i++) {
+      const availablePositionUpward = this.getAvailablePosition(
+        currentBoard,
+        1,
+        8
+      )[i];
+      const availablePositionDownward = this.getAvailablePosition(
+        currentBoard,
+        -1,
+        1
+      )[i];
+
+      movements.push(availablePositionUpward.concat(availablePositionDownward));
+    }
+
+    return movements;
   }
 
   /**
@@ -39,95 +42,25 @@ export class QueenPiece extends ChessPiece implements PieceInterface {
     currentBoard: ChessBoard,
     direction: -1 | 1,
     maximum: 1 | 8
-  ): PiecePosition[] {
+  ): Array<PiecePosition[]> {
     const availableMovement: PiecePosition[] = [];
-    let currentColumnLeft =
-      PiecePosition.transformColumnToNumber(this.position.column) - 1;
-    let currentColumnMiddle = PiecePosition.transformColumnToNumber(
-      this.position.column
-    );
-    let currentColumnRight =
-      PiecePosition.transformColumnToNumber(this.position.column) + 1;
-    for (
-      let i = this.position.row + direction;
-      this.checkMaximumFor(i, maximum);
-      i += direction
-    ) {
-      if (this.checkIfAccessible(currentColumnLeft)) {
-        const positionLeftToCheck = this.getPositionToCheck(
-          i,
-          currentColumnLeft
-        );
-        if (!currentBoard.hasPieceInPosition(positionLeftToCheck)) {
-          availableMovement.push(positionLeftToCheck);
-        }
-        currentColumnLeft = currentBoard.hasPieceInPosition(positionLeftToCheck)
-          ? -1
-          : currentColumnLeft - 1;
-      }
-      if (this.checkIfAccessible(currentColumnMiddle)) {
-        const positionMiddleToCheck = this.getPositionToCheck(
-          i,
-          currentColumnMiddle
-        );
-        if (!currentBoard.hasPieceInPosition(positionMiddleToCheck)) {
-          availableMovement.push(positionMiddleToCheck);
-        }
-        currentColumnMiddle = currentBoard.hasPieceInPosition(
-          positionMiddleToCheck
-        )
-          ? -1
-          : currentColumnMiddle;
-      }
-      if (this.checkIfAccessible(currentColumnRight)) {
-        const positionRightToCheck = this.getPositionToCheck(
-          i,
-          currentColumnRight
-        );
-        currentColumnRight = currentBoard.hasPieceInPosition(
-          positionRightToCheck
-        )
-          ? -1
-          : currentColumnRight + 1;
-        if (!currentBoard.hasPieceInPosition(positionRightToCheck)) {
-          availableMovement.push(positionRightToCheck);
-        }
-      }
-    }
-    return availableMovement;
+    const potentialAttack: PiecePosition[] = [];
+    let movements: Array<PiecePosition[]> = [];
+
+    // Vertical movements
+    this.getVerticalMovements(direction, maximum, currentBoard, availableMovement, potentialAttack);
+
+    // Horizontal movements
+    this.getHorizontalMovements(direction, maximum, currentBoard, availableMovement, potentialAttack);
+
+    // Diagonal movements
+    this.getDiagonalMovements(direction, maximum, currentBoard, availableMovement, potentialAttack);
+
+    movements.push(availableMovement);
+    movements.push(potentialAttack);
+
+    return movements;
   }
 
-  /**
-   * If we check the board going downward, the iteration value is going down and not up to a
-   * maximum, so we need to dynamise the check for maximum value in the for.
-   * @param i Current iteration value
-   * @param maximum Maximum value for the iteration
-   */
-  private checkMaximumFor(i: number, maximum: 1 | 8) {
-    return maximum === 1 ? i >= maximum : i <= maximum;
-  }
 
-  /**
-   * Check if a position should be checked
-   * @param currentColumn The current column to check (-1 = should not checked)
-   */
-  private checkIfAccessible(currentColumn: number) {
-    return (
-      currentColumn !== -1 &&
-      PiecePosition.transformNumberToColumn(currentColumn) !== undefined
-    );
-  }
-
-  /**
-   * Build a position based on the iteration for the row and the current column for the column
-   * @param i The current iteration of the for
-   * @param currentColumn The current column that we are checking
-   * @return The formatted piece position
-   */
-  private getPositionToCheck(i: number, currentColumn: number): PiecePosition {
-    return {
-      row: i as PositionRowPiece,
-      column: PiecePosition.transformNumberToColumn(currentColumn),
-    };
-  }
 }

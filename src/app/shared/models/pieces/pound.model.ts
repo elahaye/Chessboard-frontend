@@ -8,11 +8,7 @@ export class PoundPiece extends ChessPiece implements PieceInterface {
   constructor(position: PiecePosition, color: ChessPieceColor) {
     super(position, color);
     this._type = 'pound';
-    if (this._color === 'white') {
-      this._img = 'white_pound';
-    } else if (this._color === 'black') {
-      this._img = 'black_pound';
-    }
+    this.setImage();
   }
 
   /**
@@ -21,11 +17,18 @@ export class PoundPiece extends ChessPiece implements PieceInterface {
    * where he can move 2 case forward. He can also attack other pieces only in diagonal.
    * @param currentBoard
    */
-  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[] {
+  public getAvailableMovement(currentBoard: ChessBoard): PiecePosition[][] {
+    let movements: Array<PiecePosition[]> = [];
+
     const availableMovement: PiecePosition[] = this.getDefaultMovementPound(
       currentBoard
     );
-    return availableMovement.concat(this.getMovementAttack(currentBoard));
+    const potentialAttack: PiecePosition[] = this.getMovementAttack(currentBoard);
+
+    movements.push(availableMovement);
+    movements.push(potentialAttack);
+
+    return movements;
   }
 
   private getDefaultMovementPound(currentBoard: ChessBoard) {
@@ -54,7 +57,7 @@ export class PoundPiece extends ChessPiece implements PieceInterface {
   }
 
   private getMovementAttack(currentBoard: ChessBoard): PiecePosition[] {
-    const availableMovement = [];
+    const potentialAttack = [];
     const positionAttackLeft = {
       column: PiecePosition.getColumnByModifier(this.position.column, -1),
       row: (this.position.row +
@@ -70,11 +73,11 @@ export class PoundPiece extends ChessPiece implements PieceInterface {
       positionAttackRight
     );
     if (otherPieceLeft !== undefined && otherPieceLeft.color !== this.color) {
-      availableMovement.push(positionAttackLeft);
+      potentialAttack.push(positionAttackLeft);
     }
     if (otherPieceRight !== undefined && otherPieceRight.color !== this.color) {
-      availableMovement.push(positionAttackRight);
+      potentialAttack.push(positionAttackRight);
     }
-    return availableMovement;
+    return potentialAttack;
   }
 }

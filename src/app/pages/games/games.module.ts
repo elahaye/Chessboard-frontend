@@ -3,13 +3,11 @@ import { CommonModule } from '@angular/common';
 
 import { GamesRoutingModule } from './games-routing.module';
 import { GamesComponent } from './games.component';
-
+import { ButtonModule } from 'primeng/button';
+import { ChessboardModule } from 'src/app/shared/components/chessboard/chessboard.module';
 
 @NgModule({
   declarations: [GamesComponent],
-  imports: [
-    CommonModule,
-    GamesRoutingModule
-  ]
+  imports: [CommonModule, GamesRoutingModule, ButtonModule, ChessboardModule],
 })
 export class GamesModule { }

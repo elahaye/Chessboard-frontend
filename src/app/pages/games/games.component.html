@@ -1,1 +1,27 @@
-<p>games works!</p>
+<ng-container *ngIf="!selectedGame">
+  <div id="buttons">
+    <button pButton type="button" label="Start a new game" class="p-button-rounded p-button-danger"
+      (click)="startNewGame()"></button>
+  </div>
+  <div id="list">
+    <div class="oneGame" *ngFor="let game of games; let number = index">
+      <p (click)="initializeGame(game)"> Partie {{ number + 1 }}</p>
+      <button pButton type="button" class="p-button-rounded p-button-danger" label="X"
+        (click)="deleteGame(game)"></button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="selectedGame">
+  <div id="buttons">
+    <button pButton type="button" label="Reset the game" class="p-button-rounded p-button-danger"
+      (click)="resetGame()"></button>
+    <button pButton pRipple type="button" icon="pi pi-replay" class="p-button-rounded p-button-secondary"
+      (click)="goBackOneMovement()" [ngClass]="{ disabled: !goBack }"></button>
+    <button pButton type="button" label="Change game" class="p-button-rounded p-button-danger"
+      (click)="changeGame()"></button>
+  </div>
+
+  <app-chessboard [game]="game" [plays]="plays" (piecePlayed)="piecePlayed()">
+  </app-chessboard>
+</ng-container>
