@@ -1,4 +1,6 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ChessGame } from '../../models/game.model';
 import { ChessPlay } from '../../models/interfaces/chess-play.interface';
 import {
@@ -7,6 +9,7 @@ import {
   PositionRowPiece,
 } from '../../models/interfaces/position.model';
 import { ChessPiece } from '../../models/piece.model';
+import { PlaysService } from '../../services/plays/plays.service';
 
 @Component({
   selector: 'app-chessboard',
@@ -18,6 +21,11 @@ export class ChessboardComponent implements OnInit, OnChanges {
   numbers: string[] = ['1', '2', '3', '4', '5', '6', '7', '8'];
   selectedCase: string;
   turnColor: "white" | "black" = "white";
+  gameId: string = "";
+  private gamesSub: Subscription;
+
+  @Output()
+  piecePlayed: EventEmitter<void> = new EventEmitter<void>();
 
   @Input()
   game: ChessGame;
@@ -28,23 +36,46 @@ export class ChessboardComponent implements OnInit, OnChanges {
   @Input()
   potentialAttacks: string[] = [];
   @Input()
-  defeatedPieces: Array<ChessPiece> = [];
-  @Input()
   plays: ChessPlay[];
-  @Input()
-  goBack: boolean;
 
-  constructor() { }
+  constructor(private playsService: PlaysService, private route: ActivatedRoute) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.route.params.subscribe(
+      (params) => {
+        this.gameId = params.gameId;
+        this.gamesSub = this.playsService.play$.subscribe(
+          (game) => {
+            this.game = game;
+            if (this.game.plays.length != 0) {
+              let lastPlay: ChessPlay = this.game.plays[this.game.plays.length - 1];
+              const findPieceIndex = (piece: ChessPiece) => {
+                if (piece.position.column == lastPlay.newPosition.column && piece.position.row == lastPlay.newPosition.row) {
+                  return piece.color
+                } else {
+                  return false;
+                };
+              };
+              let indexOfPiece: number = this.game.board.pieces.findIndex(findPieceIndex);
+              this.turnColor = this.game.board.pieces[indexOfPiece].color == "white" ? "black" : "white";
+            }
+            else {
+              this.turnColor = "white";
+            }
+          }
+        );
+        this.playsService.getOnePlay(this.gameId);
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.gamesSub.unsubscribe();
+  }
 
   ngOnChanges(): void {
     if (this.plays.length != 0) {
-      this.turnColor = this.turnColor === "white" ? "black" : "white";
-      this.goBack = false;
-    }
-    else {
-      this.turnColor = "white";
+      this.turnColor = this.turnColor == "white" ? "black" : "white";
     }
     this.selectedPiecePosition = '';
     this.potentialsMovements = [];
@@ -96,6 +127,9 @@ export class ChessboardComponent implements OnInit, OnChanges {
 
     // Move the piece in the selected case
     this.potentialMovementsAndAttacks(potentialsMovements, potentialAttacks, this.selectedCase);
+
+    // Save the game in the database
+    this.playsService.modifyPlay(this.gameId, this.game);
   }
 
   /**
@@ -112,7 +146,7 @@ export class ChessboardComponent implements OnInit, OnChanges {
       if (potentialAttacks.includes(selectedCase)) {
         let defeatedPiece = this.findIndexOnBoard(this.selectedCase);
         // We store the defeated piece in an array
-        this.defeatedPieces.push(this.game.board.pieces[defeatedPiece]);
+        this.game.defeatedPieces.push(this.game.board.pieces[defeatedPiece]);
         this.game.board.pieces.splice(defeatedPiece, 1);
       }
 
@@ -141,7 +175,7 @@ export class ChessboardComponent implements OnInit, OnChanges {
       this.potentialAttacks = [];
 
       this.turnColor = this.turnColor === "white" ? "black" : "white";
-      this.goBack = true;
+      this.piecePlayed.emit();
     }
   }
 

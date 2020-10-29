@@ -18,9 +18,12 @@ export class ChessPiece implements PieceInterface {
   protected _color: ChessPieceColor;
   protected _img: string;
 
-  constructor(position: PiecePosition, color: ChessPieceColor) {
+  constructor(position: PiecePosition, color: ChessPieceColor, id?: string) {
     this._position = position;
     this._color = color;
+    if (id) {
+      this._id = id;
+    }
   }
 
   public get id() {

@@ -12,10 +12,15 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/games/games.module').then((m) => m.GamesModule),
   },
+  {
+    path: 'games/:gameId',
+    loadChildren: () =>
+      import('./pages/games/games.module').then((m) => m.GamesModule),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

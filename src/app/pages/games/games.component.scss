@@ -1,7 +1,46 @@
-button {
+button, #list p {
   display: inline-block;
   margin: 5px 15px;
+
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+  }
 }
-#buttons {
+#buttons, #list {
   text-align: center;
+}
+#list {
+  margin-top: 50px;
+
+
+  .oneGame {
+    display: inline-block;
+    border: 2px solid black;
+    border-radius: 20px;
+    background-color: black;
+    color: blanchedalmond;
+    padding: 30px;
+    margin: 20px;
+
+    p {
+      text-transform: uppercase;
+
+      &:hover {
+        cursor: pointer;
+      }
+  }
+
+    button {
+      display: block;
+      font-size: 10px;
+      padding: 5px 10px;
+      margin: 5px auto 0;
+
+      &:hover {
+        cursor: pointer;
+      }
+  }
+
+  }
 }

@@ -1,8 +1,7 @@
-<main>
-
+<main *ngIf="game">
   <div class="piecesGraveyard">
     <div class="list-image">
-      <ng-container *ngFor="let piece of defeatedPieces">
+      <ng-container *ngFor="let piece of game.defeatedPieces">
         <img *ngIf="piece.color === 'white'" [attr.src]="'/assets/images/' + piece.img + '.png'" [alt]="piece.img" />
       </ng-container>
     </div>
@@ -49,7 +48,7 @@
 
   <div class="piecesGraveyard">
     <div class="list-image">
-      <ng-container *ngFor="let piece of defeatedPieces">
+      <ng-container *ngFor="let piece of game.defeatedPieces">
         <img *ngIf="piece.color === 'black'" [attr.src]="'/assets/images/' + piece.img + '.png'" [alt]="piece.img" />
       </ng-container>
     </div>
